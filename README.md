@@ -7,3 +7,7 @@ Small software to convert e-amusement CSV from SDVX Vivid Wave to JSON readable 
 - [Download this software](https://github.com/Xwilarg/SDVX5ToKamaitachi/releases) and start it, select your e-amusement CSV
 - The JSON will be outputed on the application, save it in a file with the .json extension
 - Go in Kamaitachi website, in the import section select "Batch Manual" and select your file
+
+## Preview
+
+![Preview](Preview.png)
