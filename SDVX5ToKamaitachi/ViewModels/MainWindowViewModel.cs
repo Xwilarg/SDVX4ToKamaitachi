@@ -1,4 +1,4 @@
-using ReactiveUI;
+﻿using ReactiveUI;
 using SDVX5ToKamaitachi.Models;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,6 @@ using System.Linq;
 using System.Reactive;
 using System.Text.Encodings.Web;
 using System.Text.Json;
-using System.Text.RegularExpressions;
 using System.Text.Unicode;
 using System.Windows.Input;
 
@@ -15,6 +14,14 @@ namespace SDVX5ToKamaitachi.ViewModels
 {
     public class MainWindowViewModel : ReactiveObject
     {
+        private readonly Dictionary<string, string> _invalidSongs = new()
+        {
+            { "ARROW RAIN feat. ayame", "ARROW RAIN" },
+            { "トーホータノシ (feat. 抹)", "トーホータノシ feat. 抹" }
+        };
+        // Others songs that doesn't exists:
+        // けもののおうじゃ★めうめう
+
         public MainWindowViewModel()
         {
             SelectFile = ReactiveCommand.Create(() =>
@@ -30,6 +37,7 @@ namespace SDVX5ToKamaitachi.ViewModels
                     {
                         throw new InvalidOperationException("CSV is not from SDVX IV");
                     }
+                    data.RemoveAt(0);
                     var output = new KamaitachiOutput()
                     {
                         meta = new()
@@ -43,21 +51,34 @@ namespace SDVX5ToKamaitachi.ViewModels
                     List<Score> scores = new();
                     foreach (var d in data)
                     {
+                        var name = _invalidSongs.ContainsKey(d[0])
+                            ? _invalidSongs[d[0]]
+                            : d[0];
                         scores.Add(new()
                         {
                             matchType = "songTitle",
-                            identifier = d[0],
-                            difficulty = d[1][..3],
-                            lamp = d[3],
-                            score = d[5]
+                            identifier = name.Replace('，', ','),
+                            difficulty = d[1] switch
+                            {
+                                "GRAVITY" => "GRV",
+                                _ => d[1][..3]
+                            },
+                            lamp = d[3] switch
+                            {
+                                "PLAYED" => "FAILED",
+                                "COMPLETE" => "CLEAR",
+                                _ => d[3]
+                            },
+                            score = int.Parse(d[5])
                         });
                     }
                     output.scores = scores.ToArray();
 
-                    OutputData = Regex.Unescape(JsonSerializer.Serialize(output, new JsonSerializerOptions()
+                    OutputData = JsonSerializer.Serialize(output, new JsonSerializerOptions()
                     {
-                        WriteIndented = true
-                    }));
+                        WriteIndented = true,
+                        Encoder = JavaScriptEncoder.Create(UnicodeRanges.All)
+                    });
                 }));
             });
         }

@@ -25,8 +25,8 @@
 
 		<TextBox Grid.Row="1"
 				 IsReadOnly="True"
-				 Text="{Binding OutputData}"
-				 Font="Segoe UI Symbol"></TextBox>
+			     FontFamily="Meiryo"
+				 Text="{Binding OutputData}"></TextBox>
 	</Grid>
 
 </Window>
