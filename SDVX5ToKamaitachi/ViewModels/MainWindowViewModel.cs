@@ -17,10 +17,9 @@ namespace SDVX5ToKamaitachi.ViewModels
         private readonly Dictionary<string, string> _invalidSongs = new()
         {
             { "ARROW RAIN feat. ayame", "ARROW RAIN" },
-            { "トーホータノシ (feat. 抹)", "トーホータノシ feat. 抹" }
+            { "トーホータノシ (feat. 抹)", "トーホータノシ feat. 抹" },
+            { "けもののおうじゃ★めうめう", "けもののおうじゃ🐾めうめう" }
         };
-        // Others songs that doesn't exists:
-        // けもののおうじゃ★めうめう
 
         public MainWindowViewModel()
         {
